@@ -25,18 +25,16 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
-class ProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        return Response({
-            "id": user.id,
-            "username": user.username
-        }, status=status.HTTP_200_OK)
-
-
-class UserListView(generics.ListAPIView):
-    queryset = CustomUser.objects.all()
+class ProfileView(generics.RetrieveAPIView):
     serializer_class = UserListSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+class UserListView(generics.ListAPIView):
+    serializer_class = UserListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return CustomUser.objects.exclude(id=self.request.user.id)

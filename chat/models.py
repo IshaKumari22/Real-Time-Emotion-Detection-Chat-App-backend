@@ -9,9 +9,9 @@ class Thread(models.Model):
         return self.name
 class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages', on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
     content = models.TextField()
+    emotion = models.CharField(max_length=50, blank=True, null=True)  # ✅ New field
     timestamp = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
         return f"{self.user.username}: {self.content[:30]}"
