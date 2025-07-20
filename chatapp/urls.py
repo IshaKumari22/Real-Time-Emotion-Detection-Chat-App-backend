@@ -22,4 +22,6 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),  # ✅ THIS LINE ENABLES ADMIN
     path('api/', include('chat.urls')),
+    path('api/accounts/', include('accounts.urls')),
+
 ]

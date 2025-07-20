@@ -39,16 +39,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'chat',
     'corsheaders',
-    'channels'
+    'channels',
+    'accounts'
     
     
 ]
 # WSGI_APPLICATION = 'chatapp.wsgi.application'
 # Channels setup
 ASGI_APPLICATION = 'chatapp.asgi.application'
-
+AUTH_USER_MODEL = 'accounts.CustomUser'
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",

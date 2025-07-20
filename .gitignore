@@ -1,4 +1,41 @@
-venv/
-db.sqlite3
+# Python
 *.pyc
 __pycache__/
+
+# Django Migrations - Keep migrations, ignore __pycache__ inside it
+**/migrations/__pycache__/
+
+# Environment
+.env
+.env.*
+
+# Virtual Environment
+venv/
+venv/*
+
+# SQLite Database (optional)
+db.sqlite3
+
+# Logs
+*.log
+
+# VSCode settings (optional)
+.vscode/
+
+# MacOS files
+.DS_Store
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# Static and media files (if generated during runtime)
+staticfiles/
+media/
+
+# Jupyter Notebook checkpoints (if used)
+.ipynb_checkpoints/
+
+# Pytest cache
+.pytest_cache/
