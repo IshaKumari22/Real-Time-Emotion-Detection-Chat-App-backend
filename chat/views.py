@@ -1,24 +1,20 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-import tensorflow as tf
-import joblib
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+from rest_framework import generics, permissions
+from .models import Thread, Message
+from .serializers import ThreadSerializer, MessageSerializer
 
-# Load model and preprocessors once
-model = tf.keras.models.load_model('saved_model/emotion_model.keras')
-tokenizer = joblib.load('saved_model/tokenizer.joblib')
-label_encoder = joblib.load('saved_model/label_encoder.joblib')
+class ThreadListCreateView(generics.ListCreateAPIView):
+    queryset = Thread.objects.all()
+    serializer_class = ThreadSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-@api_view(['POST'])
-def predict_emotion(request):
-    text = request.data.get('text')
-    if not text:
-        return Response({"error": "No text provided"}, status=400)
+class MessageListCreateView(generics.ListCreateAPIView):
+    serializer_class = MessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    seq = tokenizer.texts_to_sequences([text])
-    padded = pad_sequences(seq, maxlen=50)
-    pred = model.predict(padded)
-    emotion_index = pred.argmax(axis=1)[0]
-    emotion = label_encoder.inverse_transform([emotion_index])[0]
+    def get_queryset(self):
+        thread_id = self.kwargs['thread_id']
+        return Message.objects.filter(thread_id=thread_id).order_by('timestamp')
 
-    return Response({"emotion": emotion})
+    def perform_create(self, serializer):
+        thread_id = self.kwargs['thread_id']
+        serializer.save(user=self.request.user, thread_id=thread_id)
